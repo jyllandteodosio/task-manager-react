@@ -19,3 +19,23 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+#add-task-form {
+
+  .w-full .top-10 {
+    top: unset;
+  }
+
+  #date {
+    outline-color: #fff;
+    outline-offset: 0;
+    outline-width: 1px;
+    border: none;
+
+    &:focus {
+      outline-color: #fff;
+      outline-offset: 0;
+      outline-width: 1px;
+    }
+  }
+}
