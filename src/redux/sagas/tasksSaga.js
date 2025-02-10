@@ -11,6 +11,7 @@ import {
   addTaskSuccess,
   addTaskFailure,
 } from '@/redux/slices/tasksSlice';
+import { formatTaskFormData } from '@/utils/formatTaskFormData';
 
 function* handleFetchTasks() {
   try {
@@ -32,6 +33,10 @@ function* handleFetchTaskById(action) {
 
 function* handleAddTask(action) {
   try {
+    // console.log({ actionPayload: action.payload });
+    // console.log({ payload_dueDateType: typeof action.payload.dueDate });
+    // const formattedTask = formatTaskFormData(action.payload);
+    // console.log({ dueDateType: typeof formattedTask.dueDate });
     const response = yield call(addTask, action.payload);
     yield put(addTaskSuccess(response));
   } catch (error) {

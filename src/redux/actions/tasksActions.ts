@@ -1,9 +1,11 @@
 import { Task } from '@/types/tasks';
 import { addTaskRequest } from '@/redux/slices/tasksSlice';
+import { formatDate } from '@/utils/formatDate';
+import { formatTaskFormData } from '@/utils/formatTaskFormData';
 
-export const createPost = (newTask: Task) => {
+export const createTask = (newTask: Task) => {
   return {
     type: addTaskRequest.type,
-    payload: newTask,
+    payload: formatTaskFormData(newTask)
   };
 };

@@ -39,7 +39,8 @@ export async function addTask(newTask: Task) {
   }
   
   const data = await response.json();
-  return data;
+  console.log({fetchedData: data})
+  return data?.result ?? [];
 }
 
 export async function updateTask(task: Task) {
