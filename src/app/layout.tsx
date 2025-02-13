@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Task Management App",
+  title: "TASKARU",
   description: "Task Management App",
 };
 

@@ -1,54 +1,63 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { fetchTasks, fetchTaskById, addTask } from '@/api/tasks';
+import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { fetchTasks, fetchTaskById, addTask, updateTask, deleteTask } from '@/api/tasks';
 import {
   fetchTasksRequest,
   fetchTasksSuccess,
   fetchTasksFailure,
-	fetchTaskByIdRequest,
+  fetchTaskByIdRequest,
   fetchTaskByIdSuccess,
   fetchTaskByIdFailure,
   addTaskRequest,
   addTaskSuccess,
   addTaskFailure,
+  updateTaskRequest,
+  updateTaskSuccess,
+  updateTaskFailure,
+  deleteTaskRequest,
+  deleteTaskSuccess,
+  deleteTaskFailure,
 } from '@/redux/slices/tasksSlice';
-import { formatTaskFormData } from '@/utils/formatTaskFormData';
+
+function* safeSaga(handler, action) {
+  try {
+    yield* handler(action);
+  } catch (error) {
+    console.error(`Saga Error: ${handler.name}`, error);
+    yield put({ type: action.type.replace("Request", "Failure"), payload: error.message });
+  }
+}
 
 function* handleFetchTasks() {
-  try {
-    const tasks = yield call(fetchTasks);
-    yield put(fetchTasksSuccess(tasks));
-  } catch (error) {
-    yield put(fetchTasksFailure(error.message));
-  }
+  const tasks = yield call(fetchTasks);
+  yield put(fetchTasksSuccess(tasks));
 }
 
 function* handleFetchTaskById(action) {
-  try {
-    const task = yield call(fetchTaskById, action.payload);
-    yield put(fetchTaskByIdSuccess(task));
-  } catch (error) {
-    yield put(fetchTaskByIdFailure(error.message));
-  }
+  const task = yield call(fetchTaskById, action.payload);
+  yield put(fetchTaskByIdSuccess(task));
 }
 
 function* handleAddTask(action) {
-  try {
-    // console.log({ actionPayload: action.payload });
-    // console.log({ payload_dueDateType: typeof action.payload.dueDate });
-    // const formattedTask = formatTaskFormData(action.payload);
-    // console.log({ dueDateType: typeof formattedTask.dueDate });
-    const response = yield call(addTask, action.payload);
-    yield put(addTaskSuccess(response));
-  } catch (error) {
-    yield put(addTaskFailure(error.message));
-  }
+  const response = yield call(addTask, action.payload);
+  yield put(addTaskSuccess(response));
 }
 
-export function* watchFetchTasks() {
-  yield takeLatest(fetchTasksRequest.type, handleFetchTasks);
-  yield takeLatest(fetchTaskByIdRequest.type, handleFetchTaskById);
+function* handleUpdateTask(action) {
+  const response = yield call(updateTask, action.payload);
+  yield put(updateTaskSuccess(response));
 }
 
-export function* watchAddTask() {
-  yield takeLatest(addTaskRequest.type, handleAddTask);
+function* handleDeleteTask(action) {
+  yield call(deleteTask, action.payload);
+  yield put(deleteTaskSuccess({ id: action.payload }));
+}
+
+export function* watchTasksSaga() {
+  yield all([
+    takeLatest(fetchTasksRequest.type, (action) => safeSaga(handleFetchTasks, action)),
+    takeLatest(fetchTaskByIdRequest.type, (action) => safeSaga(handleFetchTaskById, action)),
+    takeLatest(addTaskRequest.type, (action) => safeSaga(handleAddTask, action)),
+    takeLatest(updateTaskRequest.type, (action) => safeSaga(handleUpdateTask, action)),
+    takeLatest(deleteTaskRequest.type, (action) => safeSaga(handleDeleteTask, action)),
+  ]);
 }

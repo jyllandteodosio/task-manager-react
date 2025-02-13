@@ -10,7 +10,6 @@ export async function fetchTasks() {
   }
   
   const data = await response.json();
-  console.log({fetchedData: data})
   return data?.result ?? [];
 }
 
@@ -39,7 +38,6 @@ export async function addTask(newTask: Task) {
   }
   
   const data = await response.json();
-  console.log({fetchedData: data})
   return data?.result ?? [];
 }
 
@@ -57,7 +55,7 @@ export async function updateTask(task: Task) {
   }
   
   const data = await response.json();
-  return data;
+  return data?.result ?? [];
 }
 
 export async function deleteTask(id: string) {
@@ -73,5 +71,5 @@ export async function deleteTask(id: string) {
   }
   
   const data = await response.json();
-  return data;
+  return data?.result ?? [];
 }

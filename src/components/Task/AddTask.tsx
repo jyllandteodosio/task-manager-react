@@ -29,7 +29,7 @@ const AddTask = () => {
 					<AddTaskForm onCancel={handleCancelTask}/>
 				</div>
 			) : (
-				<button id="add-task" onClick={handleAddTask} className="mt-4 py-3 px-2 text-sm font-semibold w-full rounded-md hover:bg-gray-800">
+				<button id="add-task" onClick={handleAddTask} className="py-3 px-4 mt-4 text-sm font-semibold w-full text-left rounded-sm bg-indigo-900 hover:bg-indigo-950">
 				Add Task
 			</button>
 			)
