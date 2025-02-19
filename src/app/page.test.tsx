@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
-import Home from "@/app/page";
 import "@testing-library/jest-dom";
+import Home from "@/app/page";
 
 jest.mock("@/components/layouts/HeaderComponent", () => () => <div data-testid="header-component" />);
 jest.mock("@/components/List/ListWrapper", () => () => <div data-testid="list-wrapper" />);

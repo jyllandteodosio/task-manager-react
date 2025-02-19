@@ -73,14 +73,19 @@ const TaskComponent : React.FC<TaskComponentProps> = ({ task }) => {
 		<>
 			<form
 				id="update-task-form"
+				data-testid="update-task-form"
 				onSubmit={handleUpdateSubmit}
 				className="bg-transparent"
 				>
 				<div
+					id="textarea-wrapper"
+					data-testid="textarea-wrapper"
 					draggable="true"
 					ref={taskRef}
 					className="block bg-[#1d1d1d] border-[#1d1d1d] border-2 hover:border-white hover:border-2 rounded-sm p-4 mt-4 shadow-md min-w-80 block cursor-grab active:cursor-grabbing">
 					<textarea
+						id="add-task-form-title"
+						data-testid="add-task-form-title"
 						name="title"
 						onChange={handleFieldChange}
 						onClick={handleUpdateTask}
@@ -92,12 +97,14 @@ const TaskComponent : React.FC<TaskComponentProps> = ({ task }) => {
 					<div className="mt-4 flex justify-between">
 						<button
 							id="update-task"
+							data-testid="update-task"
 							onClick={handleUpdateSubmit}
 							className="task-buttons py-2 px-3 text-sm bg-blue-700 rounded-sm font-bold hover:bg-blue-800">
 							Update Task
 						</button>
 						<button
 							id="delete-task"
+							data-testid="delete-task"
 							onClick={handleDeleteTask}
 							className="task-buttons py-2 px-3 text-sm bg-zinc-800 rounded-sm font-bold hover:bg-zinc-900">
 							Delete Task
@@ -105,6 +112,7 @@ const TaskComponent : React.FC<TaskComponentProps> = ({ task }) => {
 						<button
 							onClick={handleCancelUpdateTask}
 							id="cancel-update-task"
+							data-testid="cancel-update-task"
 							className="task-buttons py-2 px-3 text-sm bg-red-700 rounded-sm font-bold hover:bg-red-900">
 							Cancel
 						</button>

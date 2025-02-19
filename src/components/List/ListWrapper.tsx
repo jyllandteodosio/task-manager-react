@@ -1,14 +1,14 @@
 'use client'
-import ClientProvider from "@/components/layouts/ComponentProvider";
+import ReduxProvider from "@/components/layouts/ReduxProvider";
 import List from "./List";
 
 const ListWrapper = () => {
 
 	return (
 		<div id="list-wrapper">
-			<ClientProvider>
+			<ReduxProvider>
 				<List />
-			</ClientProvider>
+			</ReduxProvider>
 		</div>
 	)
 }

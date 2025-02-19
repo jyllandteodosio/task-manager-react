@@ -20,7 +20,7 @@ const List = () => {
 	// if (error) return <p>Error: {error}</p>;
 
 	return (
-		<div id="list" className="bg-transparent rounded-sm border-2 border-white px-4 py-6 ring shadow-xl ring-gray-900/5 min-w-80 block">
+		<div id="list" data-testid="list" className="bg-transparent rounded-sm border-2 border-white px-4 py-6 ring shadow-xl ring-gray-900/5 min-w-80 block">
 			{items && (
 				items.map((task: Task) => {
 					const newTask: Task = {
