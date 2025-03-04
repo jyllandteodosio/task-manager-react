@@ -3,7 +3,10 @@ import { config } from "../../config"
 const BASE_URL = config.API_URL;
 
 export async function fetchTasks() {
-  const response = await fetch(`${BASE_URL}/tasks`);
+  const response = await fetch(`${BASE_URL}/tasks`, {
+    method: "GET",
+    credentials: "include",
+  });
   
   if (!response.ok) {
     throw new Error('Failed to fetch tasks');
@@ -14,19 +17,37 @@ export async function fetchTasks() {
 }
 
 export async function fetchTaskById(id: string) {
-  const response = await fetch(`${BASE_URL}/tasks/${id}`);
+  const response = await fetch(`${BASE_URL}/tasks/${id}`, {
+    method: "GET",
+    credentials: "include",
+  });
   
   if (!response.ok) {
     throw new Error(`Failed to fetch task with id: ${id}`);
   }
   
   const data = await response.json();
-  return data;
+  return data?.result ?? [];
+}
+
+export async function fetchTasksByUserId(userId: string) {
+  const response = await fetch(`${BASE_URL}/tasks/user/`, {
+    method: "GET",
+    credentials: "include",
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Failed to fetch task with userId: ${userId}`);
+  }
+  
+  const data = await response.json();
+  return data?.result ?? [];
 }
 
 export async function addTask(newTask: Task) {
   const response = await fetch(`${BASE_URL}/tasks`, {
     method: 'POST',
+    credentials: "include",
     headers: {
       'Content-Type': 'application/json',
     },
@@ -44,6 +65,7 @@ export async function addTask(newTask: Task) {
 export async function updateTask(task: Task) {
   const response = await fetch(`${BASE_URL}/tasks/${task.id}`, {
     method: 'PUT',
+    credentials: "include",
     headers: {
       'Content-Type': 'application/json',
     },
@@ -61,6 +83,7 @@ export async function updateTask(task: Task) {
 export async function deleteTask(id: string) {
   const response = await fetch(`${BASE_URL}/tasks/${id}`, {
     method: 'DELETE',
+    credentials: "include",
     headers: {
       'Content-Type': 'application/json',
     },

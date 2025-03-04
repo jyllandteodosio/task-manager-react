@@ -15,7 +15,7 @@ const AddTask = () => {
 				block: "center",
 				inline: "nearest"
 			});
-		},0);
+		}, 0);
 	}
 
 	const handleCancelTask = () => {
@@ -26,15 +26,15 @@ const AddTask = () => {
 		<>
 			{formState ? (
 				<div id="add-task-wrapper" ref={formRef}>
-					<AddTaskForm onCancel={handleCancelTask}/>
+					<AddTaskForm onCancel={handleCancelTask} />
 				</div>
 			) : (
 				<button id="add-task" data-testid="add-task" onClick={handleAddTask} className="py-3 px-4 mt-4 text-sm font-semibold w-full text-left rounded-sm bg-indigo-900 hover:bg-indigo-950">
-				Add Task
-			</button>
+					Add Task
+				</button>
 			)
 			}
-			
+
 		</>
 	)
 }

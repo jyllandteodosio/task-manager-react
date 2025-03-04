@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { renderWithProviders } from "@/utils/testUtils";
 import "@testing-library/jest-dom";
-import List from "./List";
+import List from "./ListComponent";
 import { Task } from "@/types/tasks";
 import { useDispatch, useSelector } from "react-redux";
 

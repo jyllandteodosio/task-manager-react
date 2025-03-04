@@ -14,7 +14,13 @@ export const setupStore = (preloadedState?: Partial<RootState>) => {
   const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({ thunk: false }).concat(middleware),
+      getDefaultMiddleware({ 
+        thunk: false,
+        serializableCheck: {
+          ignoredActions: ['auth/loginRequest', 'users/addUserRequest'],
+          ignoredPaths: ['auth/payload.onLoginSuccess', 'users/onRegisterSuccess'],
+        }
+      }).concat(middleware),
     devTools: process.env.NODE_ENV !== 'production',
     preloadedState,
   });

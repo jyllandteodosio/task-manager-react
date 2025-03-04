@@ -1,19 +1,21 @@
 'use client';
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Task } from "@/types/tasks";
-import { createTask } from "@/redux/actions/tasksActions";
+import { createTask } from "@/redux/actions/taskActions";
+import { RootState } from "@/types";
 
 interface AddTaskFormProps {
 	onCancel: () => void;
 }
 
 const AddTaskForm: React.FC<AddTaskFormProps> = ({ onCancel }) => {
+	const currentUserId = useSelector((state: RootState) => state.users.currentUser);
 	const [taskData, setTaskData] = useState<Task>({
 		id: "",
 		title: "",
 		body: "",
-		userId: "0",
+		userId: currentUserId ?? "",
 		creationDate: new Date(),
 		prev: "",
 	});
@@ -39,25 +41,25 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onCancel }) => {
 		onCancel();
 	};
 
-
 	return (
-		<>
+		<div className="flex-auto justify-between border-none">
 			<form
 				id="add-task-form"
 				data-testid="add-task-form"
 				onSubmit={handleSubmit}
 				className="bg-transparent"
+				data-userid={currentUserId}
 			>
 				<div
 					id="textarea-wrapper"
 					data-testid="textarea-wrapper"
-					className="block bg-[#1d1d1d] border-[#1d1d1d] border-2 hover:border-white hover:border-2 rounded-sm p-4 mt-4 shadow-md min-w-80 block">
+					className="min-w-0 flex-auto px-5 py-4 bg-zinc-800 hover:bg-zinc-700">
 					<textarea
 						id="add-task-form-title"
 						data-testid="add-task-form-title"
 						name="title"
 						onChange={handleFieldChange}
-						className="resize-none bg-transparent w-full text-white text-base font-medium tracking-tight focus-visible:outline-0 focus-visible:bg-[#1d1d1d]"
+						className="text-sm/6 font-semibold text-white tracking-tight bg-transparent w-full resize-none focus-visible:outline-0"
 						placeholder="Enter task" />
 
 				</div>
@@ -81,7 +83,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ onCancel }) => {
 				</div>
 
 			</form>
-		</>
+		</div>
 	)
 }
 

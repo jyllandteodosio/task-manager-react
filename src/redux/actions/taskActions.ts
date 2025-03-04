@@ -1,5 +1,5 @@
 import { Task } from '@/types/tasks';
-import { addTaskRequest, deleteTaskRequest, updateTaskRequest } from '@/redux/slices/tasksSlice';
+import { addTaskRequest, deleteTaskRequest, updateTaskRequest, fetchTasksByUserIdRequest } from '@/redux/slices/tasksSlice';
 import { formatTaskFormData } from '@/utils/formatTaskFormData';
 
 export const createTask = (newTask: Task) => {
@@ -20,6 +20,13 @@ export const deleteTask = (id: string) => {
   return {
     type: deleteTaskRequest.type,
     payload: id
+  };
+};
+
+export const fetchTasksByUser = (userId: string) => {
+  return {
+    type: fetchTasksByUserIdRequest.type,
+    payload: userId,
   };
 };
 

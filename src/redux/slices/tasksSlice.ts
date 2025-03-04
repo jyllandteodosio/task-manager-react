@@ -13,15 +13,15 @@ const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    fetchTasksRequest: (state) => {
+    fetchTasksByUserIdRequest: (state) => {
       state.loading = true;
       state.error = null;
     },
-    fetchTasksSuccess: (state, action: PayloadAction<Task[]>) => {
+    fetchTasksByUserIdSuccess: (state, action: PayloadAction<Task[]>) => {
       state.loading = false;
       state.items = action.payload;
     },
-    fetchTasksFailure: (state, action: PayloadAction<string>) => {
+    fetchTasksByUserIdFailure: (state, action: PayloadAction<string>) => {
       state.loading = false;
       state.error = action.payload;
     },
@@ -82,9 +82,9 @@ const tasksSlice = createSlice({
 });
 
 export const {
-  fetchTasksRequest,
-  fetchTasksSuccess,
-  fetchTasksFailure,
+  fetchTasksByUserIdRequest,
+  fetchTasksByUserIdSuccess,
+  fetchTasksByUserIdFailure,
   fetchTaskByIdRequest,
   fetchTaskByIdSuccess,
   fetchTaskByIdFailure,

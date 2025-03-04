@@ -10,4 +10,5 @@ export interface UsersState {
 	items: User[],
 	loading: boolean,
 	error: string | null,
+	currentUser: string | null,
 }

@@ -1,9 +1,12 @@
 import { all } from 'redux-saga/effects';
 import { watchTasksSaga } from './tasksSaga';
-// import { watchFetchUsers } from './usersSaga';
+import { watchUsersSaga } from './usersSaga';
+import { watchAuthSaga } from './authSaga';
 
 export default function* rootSaga() {
   yield all([
+    watchAuthSaga(),
     watchTasksSaga(),
+    watchUsersSaga(),
   ]);
 }

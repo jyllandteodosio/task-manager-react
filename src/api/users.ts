@@ -36,7 +36,7 @@ export async function fetchUserTasksById(id: string) {
 }
 
 export async function addUser(newUser: User) {
-  const response = await fetch(`${BASE_URL}/users`, {
+  const response = await fetch(`${BASE_URL}/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

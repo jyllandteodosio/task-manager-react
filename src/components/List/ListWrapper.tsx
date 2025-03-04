@@ -1,6 +1,6 @@
 'use client'
 import ReduxProvider from "@/components/layouts/ReduxProvider";
-import List from "./List";
+import List from "./ListComponent";
 
 const ListWrapper = () => {
 

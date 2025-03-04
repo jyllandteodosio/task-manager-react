@@ -1,9 +1,9 @@
 import { call, put, takeLatest, all } from 'redux-saga/effects';
-import { fetchTasks, fetchTaskById, addTask, updateTask, deleteTask } from '@/api/tasks';
+import { fetchTasks, fetchTaskById, fetchTasksByUserId, addTask, updateTask, deleteTask } from '@/api/tasks';
 import {
-  fetchTasksRequest,
-  fetchTasksSuccess,
-  fetchTasksFailure,
+  fetchTasksByUserIdRequest,
+  fetchTasksByUserIdSuccess,
+  fetchTasksByUserIdFailure,
   fetchTaskByIdRequest,
   fetchTaskByIdSuccess,
   fetchTaskByIdFailure,
@@ -27,9 +27,10 @@ function* safeSaga(handler, action) {
   }
 }
 
-function* handleFetchTasks() {
-  const tasks = yield call(fetchTasks);
-  yield put(fetchTasksSuccess(tasks));
+function* handleFetchTasksByUserId(action) {
+  const userId = action.payload;
+  const tasks = yield call(fetchTasksByUserId, userId);
+  yield put(fetchTasksByUserIdSuccess(tasks));
 }
 
 function* handleFetchTaskById(action) {
@@ -54,7 +55,7 @@ function* handleDeleteTask(action) {
 
 export function* watchTasksSaga() {
   yield all([
-    takeLatest(fetchTasksRequest.type, (action) => safeSaga(handleFetchTasks, action)),
+    takeLatest(fetchTasksByUserIdRequest.type, (action) => safeSaga(handleFetchTasksByUserId, action)),
     takeLatest(fetchTaskByIdRequest.type, (action) => safeSaga(handleFetchTaskById, action)),
     takeLatest(addTaskRequest.type, (action) => safeSaga(handleAddTask, action)),
     takeLatest(updateTaskRequest.type, (action) => safeSaga(handleUpdateTask, action)),
