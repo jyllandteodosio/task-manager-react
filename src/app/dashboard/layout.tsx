@@ -2,41 +2,38 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { checkAuth } from "@/api/auth";
-import { useDispatch } from 'react-redux';
-import { setCurrentUser } from '@/redux/slices/usersSlice';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { checkAuth } from "@/redux/slices/authSlice";
 
 export default function DashboardLayout({
-	children,
+    children,
 }: {
-	children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-	const router = useRouter();
-	const dispatch = useDispatch();
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const router = useRouter();
+    const dispatch = useDispatch<AppDispatch>(); 
 
-	useEffect(() => {
-		const verifyUser = async () => {
-			try {
-				const authData = await checkAuth();
+    useEffect(() => {
+        const verifyUser = async () => {
+            try {
+                const resultAction = await dispatch(checkAuth()).unwrap(); 
+                if (resultAction.isAuthenticated) {
+                    setIsAuthenticated(true);
+                } else {
+                    router.push("/login");
+                }
+            } catch (error) {
+                console.error("Error checking authentication:", error);
+                router.push("/login");
+            }
+        };
 
-				if (authData?.isAuthenticated) {
-					setIsAuthenticated(true);
-					if (authData.userId) {
-						dispatch(setCurrentUser(authData.userId));
-					}
-				} else {
-					router.push("/login");
-				}
-			} catch (error) {
-				console.error("Error checking authentication:", error);
-				router.push("/login");
-			}
-		};
+        verifyUser();
+    }, [dispatch, router]);
 
-		verifyUser();
-	}, [router]);
-	if (isAuthenticated === null) return <p>Loading...</p>;
+    if (isAuthenticated === null) return <p>Loading...</p>;
 
-	return <>{children}</>;
+    return <>{children}</>;
 }
