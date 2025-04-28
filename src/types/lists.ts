@@ -1,13 +1,9 @@
-export interface List {
-	id: string,
-	title: string,
-	userId: string,
-	creationDate: Date,
-}
-
-export interface ListsState {
-	items: List[],
-	loading: boolean,
-	error: string | null,
-	currentList: List | null,
+export interface ListType {
+	_id: string;
+	title: string;
+	description?: string;
+	ownerId: string;
+	collaborators: string[];
+	createdAt: string;
+	updatedAt: string;
 }

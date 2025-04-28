@@ -13,12 +13,12 @@ export default function DashboardLayout({
 }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
     const router = useRouter();
-    const dispatch = useDispatch<AppDispatch>(); 
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         const verifyUser = async () => {
             try {
-                const resultAction = await dispatch(checkAuth()).unwrap(); 
+                const resultAction = await dispatch(checkAuth()).unwrap();
                 if (resultAction.isAuthenticated) {
                     setIsAuthenticated(true);
                 } else {

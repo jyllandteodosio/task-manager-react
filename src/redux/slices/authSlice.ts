@@ -17,7 +17,7 @@ export const checkAuth = createAsyncThunk<
 		});
 		if (!response.ok) throw new Error('Failed to get auth status');
 		const data = await response.json();
-		return data.result;
+		return data;
 	} catch (error) {
 		if (error instanceof Error) {
 			return rejectWithValue(error.message);

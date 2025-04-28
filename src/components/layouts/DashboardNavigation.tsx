@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const DashboardNavigation = () => {
 	return (
-		<nav className="bg-[#F9F9F9] shadow-sm h-screen px-4 py-2">
+		<nav className="bg-[#F9F9F9] shadow-sm h-full px-4 py-2">
 			<div className="flex items-center mb-10">
 				<div className="shrink-0">
 					<Image src={TaskaruIcon} alt="Taskaru" priority={true} className="w-12 h-12" />

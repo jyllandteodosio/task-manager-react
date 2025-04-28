@@ -1,12 +1,26 @@
 'use client'
+import { ListType } from "@/types/lists";
+import UserIcon from "../User/UserIcon";
 
-import UserIcon from "../User/UserIcon"
+interface ListProps {
+	list: ListType;
+	isSelected: boolean | null;
+	handleListClick: React.MouseEventHandler<HTMLLIElement>;
+}
 
-const List = () => {
+const List = ({ list, isSelected, handleListClick }: ListProps) => {
+
+	const selectedClass = "bg-[#5A5A5A] border-[#5A5A5A] text-white";
+	const unselectedClass = "bg-[#F9FAFB] border-[#EAECF0] text-[#373737]";
+	const listClass = isSelected ? selectedClass : unselectedClass;
+	const listTitleTrimmed = list.title.length > 60 ? list.title.slice(0, 60) + "..." : list.title;
+
 	return (
-		<li id="list" className="flex justify-between p-4 rounded-lg bg-[#F9FAFB] border-2 border-[#EAECF0] hover:bg-[#5A5A5A] hover:border-[#5A5A5A] hover:text-white transition-all duration-300 ease-in-out">
+		<li id="list"
+			onClick={handleListClick}
+			className={`${listClass} flex justify-between p-4 rounded-lg hover:bg-[#5A5A5A] hover:border-[#5A5A5A] hover:text-white transition-all duration-300 ease-in-out`}>
 			<h3 id="list-title">
-				Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+				{listTitleTrimmed}
 			</h3>
 			<UserIcon />
 		</li>
