@@ -3,14 +3,25 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useFetchTasksByListIdQuery } from '@/redux/api/apiSlice';
+import { TaskType } from '@/types/tasks';
 import SharedWith from "./SharedWith";
-import Task from "./Task";
+import Task from "../Task/Task";
 import Modal from '../layouts/Modal';
 import AddTaskForm from '../Task/AddTaskForm';
+import ListDetailOptions from './ListDetailOptions';
 
 const ListDetailSection = () => {
-	const currentList = useSelector((state: RootState) => state.currentList.currentList);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+	const currentList = useSelector((state: RootState) => state.currentList.currentList);
+
+	const { data: tasks, isLoading, isError } = useFetchTasksByListIdQuery(
+		currentList?._id,
+		{
+			skip: !currentList,
+		}
+	);
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
@@ -35,13 +46,7 @@ const ListDetailSection = () => {
 							<p className="leading-7 text-[#344054]">{currentList.description}</p>
 						</div>
 					</div>
-					<div id="list-detail-options-wrapper">
-						<button id="list-detail-options" className="rounded-full bg-[#F9FAFB] hover:bg-[#EAECF0] py-2 px-1 transition-all duration-300 ease-in-out">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-								<path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z" />
-							</svg>
-						</button>
-					</div>
+					<ListDetailOptions />
 				</div>
 				<SharedWith />
 				<div id="tasks-wrapper" className="mt-6 overflow-hidden xl:border-none border-b-2 border-zinc-300">
@@ -59,14 +64,17 @@ const ListDetailSection = () => {
 					</div>
 					<div id="tasks" className="">
 						<ul className="divide-y-[1px] divide-[#EAECF0]">
-							<Task />
-							<Task />
-							<Task />
-							<Task />
-							<Task />
-							<Task />
-							<Task />
-							<Task />
+							{isLoading && <p>Loading tasks...</p>}
+							{isError && <p className="text-red-500">Failed to load tasks.</p>}
+							{tasks && tasks.result && tasks.result.length > 0 ? (
+								tasks.result.map((task: TaskType) => (
+									<Task key={task._id} task={task} />
+								))
+							) : (
+								<li className="p-4 hover:shadow-md">
+									<p className="text-sm leading-6 text-gray-500">No tasks available.</p>
+								</li>
+							)}
 						</ul>
 					</div>
 				</div>

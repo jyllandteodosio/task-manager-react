@@ -42,8 +42,6 @@ const AddListForm: React.FC<AddListFormProps> = ({ closeModal }) => {
 			description: formData.description?.trim() || undefined,
 		};
 
-		console.log("Submitting list data:", payload);
-
 		try {
 			const result = await addList(payload).unwrap();
 			console.log("List added successfully:", result);

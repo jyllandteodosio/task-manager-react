@@ -1,26 +1,27 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { useAddTaskUnderListMutation } from "@/redux/api/apiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useUpdateListMutation } from "@/redux/api/apiSlice";
+import { setCurrentList } from "@/redux/slices/currentListSlice";
 import { RootState } from "@/redux/store";
 import ErrorMessageAlert from "../Alerts/ErrorMessageAlert";
 
-interface NewTaskData {
+interface NewListData {
 	title: string;
 	description?: string;
 }
 
-interface AddTaskFormProps {
+interface EditListFormProps {
 	closeModal: () => void;
 }
 
-const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
+const EditListForm: React.FC<EditListFormProps> = ({ closeModal }) => {
+	const dispatch = useDispatch();
 	const currentList = useSelector((state: RootState) => state.currentList.currentList);
-	const [formData, setFormData] = useState<NewTaskData>({
-		title: "",
-		description: "",
+	const [formData, setFormData] = useState<NewListData>({
+		title: currentList?.title || "",
+		description: currentList?.description || "",
 	});
-
-	const [addTask, { isLoading, isError, error }] = useAddTaskUnderListMutation();
+	const [updateList, { isLoading, isError, error }] = useUpdateListMutation();
 
 	const handleFieldChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,10 +34,11 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		console.log("EditListForm submitted");
 		e.preventDefault();
 
 		if (!formData.title.trim()) {
-			alert("Task title cannot be empty.");
+			alert("List title cannot be empty.");
 			return;
 		}
 
@@ -46,45 +48,41 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 		}
 
 		const payload = {
-			listId: currentList._id,
-			newTask: {
-				title: formData.title.trim(),
-				description: formData.description?.trim() || undefined,
-			},
+			id: currentList._id,
+			title: formData.title.trim(),
+			description: formData.description?.trim() || undefined,
 		};
 
-		console.log("Submitting task data:", payload);
-
 		try {
-			const result = await addTask(payload).unwrap();
-			console.log("Task added successfully:", result);
+			const data = await updateList(payload).unwrap();
+
+			dispatch(setCurrentList(data.result));
 
 			setFormData({ title: "", description: "" });
 			closeModal();
-
 		} catch (err) {
-			console.error("Failed to add task:", err);
+			console.error("Failed to edit list:", err);
 		}
 	};
 
 	return (
 		<>
-			<h2 className="mb-4 text-xl font-semibold text-gray-800">Add New Task</h2>
+			<h2 className="mb-4 text-xl font-semibold text-gray-800">Edit List</h2>
 
 			{isError && <ErrorMessageAlert error={error} />}
 
 			<form
 				className="mt-4 space-y-4"
-				id="add-task-form"
+				id="edit-list-form"
 				onSubmit={handleSubmit}
 			>
 				<div>
-					<label htmlFor="task-title" className="block text-sm font-medium leading-6 text-gray-900">
+					<label htmlFor="list-title" className="block text-sm font-medium leading-6 text-gray-900">
 						Title <span className="text-red-600">*</span>
 					</label>
 					<div className="mt-1">
 						<input
-							id="task-title"
+							id="list-title"
 							name="title"
 							type="text"
 							value={formData.title}
@@ -97,12 +95,12 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 				</div>
 
 				<div>
-					<label htmlFor="task-description" className="block text-sm font-medium leading-6 text-gray-900">
+					<label htmlFor="list-description" className="block text-sm font-medium leading-6 text-gray-900">
 						Description (Optional)
 					</label>
 					<div className="mt-1">
 						<textarea
-							id="task-description"
+							id="list-description"
 							name="description"
 							rows={3}
 							value={formData.description}
@@ -127,7 +125,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 						disabled={isLoading || !formData.title.trim()}
 						className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
 					>
-						{isLoading ? "Adding..." : "Add Task"}
+						{isLoading ? "Updating List..." : "Edit List"}
 					</button>
 				</div>
 			</form>
@@ -135,4 +133,4 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 	);
 };
 
-export default AddTaskForm;
+export default EditListForm;

@@ -64,14 +64,14 @@ export const apiSlice = createApi({
 				method: 'PUT',
 				body: updatedList,
 			}),
-			invalidatesTags: (result, error, { id }) => [{ type: 'List', id }],
+			invalidatesTags: ['List'],
 		}),
 		deleteList: builder.mutation({
 			query: (id) => ({
 				url: `/lists/${id}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, id) => [{ type: 'List', id }],
+			invalidatesTags: ['List'],
 		}),
 
 		// Task endpoints

@@ -21,7 +21,7 @@ const ListsSection = () => {
 		if (lists && lists.result && lists.result.length > 0 && !currentList) {
 			dispatch(setCurrentList(lists.result[0]));
 		}
-	}, [lists, dispatch]);
+	}, [lists, dispatch, currentList]);
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
@@ -59,13 +59,19 @@ const ListsSection = () => {
 				<ul className="flex flex-col gap-y-4">
 					{isLoading && <p>Loading lists...</p>}
 					{isError && <p className="text-red-500">"Failed to load lists"</p>}
-					{lists && lists.result && lists.result.map((list: ListType) => (
-						<List
-							key={list._id}
-							list={list}
-							isSelected={currentList && list._id === currentList._id}
-							handleListClick={() => handleListClick(list)} />
-					))}
+					{lists && lists.result && lists.result.length > 0 ? (
+						lists.result.map((list: ListType) => (
+							<List
+								key={list._id}
+								list={list}
+								isSelected={currentList && list._id === currentList._id}
+								handleListClick={() => handleListClick(list)} />
+						))
+					) : (
+						<li className="p-4">
+							<p className="text-gray-500">No lists available.</p>
+						</li>
+					)}
 				</ul>
 			</div>
 		</div>
