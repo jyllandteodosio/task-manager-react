@@ -1,14 +1,14 @@
-export interface User {
-	id: string;
+export interface UserType {
+	_id: string;
 	username: string;
 	password: string;
 	firstName: string;
 	lastName: string;
 }
 
-export interface UsersState {
-	items: User[],
-	loading: boolean,
-	error: string | null,
-	currentUser: string | null,
+export interface AuthState {
+	user: UserType | null;
+	isAuthenticated: boolean;
+	status: 'idle' | 'loading' | 'succeeded' | 'failed';
+	error: string | null;
 }

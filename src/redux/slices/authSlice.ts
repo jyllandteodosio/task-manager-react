@@ -1,10 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { config } from '../../../config';
 import { UserCredentials } from '@/types/userCredentials';
+import { AuthState } from '@/types/users';
 
 const BASE_URL = config.API_URL;
 
-// Thunk for checking authentication status
+interface LoginCredentialsWithRecaptcha extends UserCredentials {
+	recaptchaToken: string;
+}
+
+
 export const checkAuth = createAsyncThunk<
 	{ isAuthenticated: boolean; user: any },
 	void,
@@ -17,7 +22,11 @@ export const checkAuth = createAsyncThunk<
 		});
 		if (!response.ok) throw new Error('Failed to get auth status');
 		const data = await response.json();
-		return data;
+		console.log('Auth status response:', data);
+		return {
+			isAuthenticated: data.isAuthenticated,
+			user: data.result,
+		};
 	} catch (error) {
 		if (error instanceof Error) {
 			return rejectWithValue(error.message);
@@ -26,10 +35,9 @@ export const checkAuth = createAsyncThunk<
 	}
 });
 
-// Thunk for login
 export const login = createAsyncThunk<
 	{ user: any },
-	UserCredentials,
+	LoginCredentialsWithRecaptcha,
 	{ rejectValue: string }
 >('auth/login', async (credentials, { rejectWithValue }) => {
 	try {
@@ -50,15 +58,17 @@ export const login = createAsyncThunk<
 	}
 });
 
+const initialState: AuthState = {
+	user: null,
+	isAuthenticated: false,
+	status: 'idle',
+	error: null,
+};
+
 // Slice for authentication
 const authSlice = createSlice({
 	name: 'auth',
-	initialState: {
-		user: null,
-		isAuthenticated: false,
-		status: 'idle',
-		error: null as string | null,
-	},
+	initialState: initialState,
 	reducers: {
 		logout: (state) => {
 			state.user = null;

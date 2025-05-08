@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useAddTaskUnderListMutation } from "@/redux/api/apiSlice";
+import { TaskType } from "@/types/tasks";
+import { useUpdateTaskUnderListMutation } from "@/redux/api/apiSlice";
 import { RootState } from "@/redux/store";
 import ErrorMessageAlert from "../Alerts/ErrorMessageAlert";
 
@@ -9,18 +10,19 @@ interface NewTaskData {
 	description?: string;
 }
 
-interface AddTaskFormProps {
+interface EditTaskFormProps {
+	task: TaskType;
 	closeModal: () => void;
 }
 
-const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
-	const currentList = useSelector((state: RootState) => state.currentList.currentList);
+const EditTaskForm: React.FC<EditTaskFormProps> = ({ task, closeModal }) => {
 	const [formData, setFormData] = useState<NewTaskData>({
-		title: "",
-		description: "",
+		title: task?.title || "",
+		description: task?.description || "",
 	});
 
-	const [addTask, { isLoading, isError, error }] = useAddTaskUnderListMutation();
+	const currentList = useSelector((state: RootState) => state.currentList.currentList);
+	const [updateTask, { isLoading, isError, error }] = useUpdateTaskUnderListMutation();
 
 	const handleFieldChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,6 +35,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		console.log("EditTaskForm submitted");
 		e.preventDefault();
 
 		if (!formData.title.trim()) {
@@ -40,39 +43,34 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 			return;
 		}
 
-		if (!currentList?._id) {
-			alert("No list is currently selected.");
-			return;
-		}
-
 		const payload = {
-			listId: currentList._id,
-			newTask: {
+			listId: currentList?._id,
+			taskId: task._id,
+			updatedTask: {
 				title: formData.title.trim(),
 				description: formData.description?.trim() || undefined,
-			},
-		};			
+			}
+		};
 
 		try {
-			const result = await addTask(payload).unwrap();
+			const data = await updateTask(payload).unwrap();
 
 			setFormData({ title: "", description: "" });
 			closeModal();
-
 		} catch (err) {
-			console.error("Failed to add task:", err);
+			console.error("Failed to edit task:", err);
 		}
 	};
 
 	return (
 		<>
-			<h2 className="mb-4 text-xl font-semibold text-gray-800">Add New Task</h2>
+			<h2 className="mb-4 text-xl font-semibold text-gray-800">Edit Task</h2>
 
 			{isError && <ErrorMessageAlert error={error} />}
 
 			<form
 				className="mt-4 space-y-4"
-				id="add-task-form"
+				id="edit-task-form"
 				onSubmit={handleSubmit}
 			>
 				<div>
@@ -124,7 +122,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 						disabled={isLoading || !formData.title.trim()}
 						className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
 					>
-						{isLoading ? "Adding..." : "Add Task"}
+						{isLoading ? "Updating Task..." : "Edit Task"}
 					</button>
 				</div>
 			</form>
@@ -132,4 +130,4 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 	);
 };
 
-export default AddTaskForm;
+export default EditTaskForm;

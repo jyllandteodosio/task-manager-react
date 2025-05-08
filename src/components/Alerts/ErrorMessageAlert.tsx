@@ -15,7 +15,18 @@ const ErrorMessageAlert: React.FC<ErrorMessageProps> = ({ error }) => {
 		errorMessage = error;
 	} else if ("data" in error) {
 		const serverError = error as FetchBaseQueryError;
-		errorMessage = serverError.status.toString() || errorMessage;
+
+		if (typeof serverError.data === "string") {
+			errorMessage = serverError.data;
+		}
+		else if (typeof serverError.data === "object" && serverError.data !== null) {
+			errorMessage = (serverError.data as { message?: string }).message || errorMessage;
+		}
+		else if (typeof serverError.data === "object" && serverError.data !== null) {
+			errorMessage = (serverError.data as { status?: string }).status || errorMessage;
+		}
+
+		// errorMessage = serverError.status.toString() || errorMessage;
 	} else if ("message" in error) {
 		const clientError = error as SerializedError;
 		errorMessage = clientError.message || errorMessage;

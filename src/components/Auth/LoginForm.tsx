@@ -1,14 +1,16 @@
 'use client'
-import { useState } from "react";
+
+import { useState, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import { AppDispatch } from '@/redux/store';
+import { login } from '@/redux/slices/authSlice';
+import { UserCredentials } from "@/types/userCredentials";
 import Link from "next/link";
 import Image from "next/image";
 import TaskaruIcon from "@/assets/icons/taskaru_icon.png";
-import { UserCredentials } from "@/types/userCredentials";
-import { login } from '@/redux/slices/authSlice';
-import { AppDispatch } from '@/redux/store';
 import ErrorMessageAlert from "../Alerts/ErrorMessageAlert";
+// import { useGoogleReCaptcha } from '@google-recaptcha/react';
 
 const LoginForm = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +21,8 @@ const LoginForm = () => {
 	});
 	const [error, setError] = useState<string | null>(null);
 
+	// const { executeV3 } = useGoogleReCaptcha();
+
 	const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 		setLoginData((prevData) => ({
@@ -27,10 +31,24 @@ const LoginForm = () => {
 		}));
 	};
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		// if (!executeV3) {
+		// 	console.log('Recaptcha not yet available');
+		// 	return;
+		// }
+
 		try {
-			const resultAction = await dispatch(login(loginData)).unwrap();
+			// const token = await executeV3('login');
+			const token = "dummy";
+
+			const loginPayload = {
+				...loginData,
+				recaptchaToken: token,
+			};
+
+			const resultAction = await dispatch(login(loginPayload)).unwrap();
 			if (resultAction) {
 				router.push("/dashboard");
 			}
@@ -43,7 +61,8 @@ const LoginForm = () => {
 				setError("An unknown error occurred");
 			}
 		}
-	};
+	// }, [executeV3, loginData, dispatch, router]);
+	}, [loginData, dispatch, router]);
 
 	return (
 		<div id="login-wrapper" className="mt-10 w-lg sm:mx-auto sm:w-full sm:max-w-sm">

@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { TaskType } from "@/types/tasks";
 import Modal from "../layouts/Modal";
-import EditListForm from "./EditListForm";
-import DeleteListForm from "./DeleteListForm";
+import EditTaskForm from "./EditTaskForm";
+import DeleteTaskForm from "./DeleteTaskForm";
+// import DeleteTaskForm from "./DeleteTaskForm";
 
-const ListDetailOptions = () => {
+const TaskOptions = ({ task }: { task: TaskType }) => {
 	const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState<boolean>(false);
@@ -49,9 +51,9 @@ const ListDetailOptions = () => {
 
 
 	return (
-		<div id="list-detail-options-wrapper" className="relative">
+		<div id="task-options-wrapper" className="relative">
 			<button
-				id="list-detail-options"
+				id="task-options"
 				ref={optionsButtonRef}
 				onClick={toggleOptions}
 				className="rounded-full bg-[#F9FAFB] hover:bg-[#EAECF0] py-2 px-1 transition-all duration-300 ease-in-out"
@@ -66,10 +68,10 @@ const ListDetailOptions = () => {
 				<div
 					id="options-menu"
 					ref={optionsMenuRef}
-					className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10"
+					className="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
 					role="menu"
 					aria-orientation="vertical"
-					aria-labelledby="list-detail-options"
+					aria-labelledby="task-options"
 				>
 					<div className="py-1" role="none">
 						<button
@@ -78,7 +80,7 @@ const ListDetailOptions = () => {
 							className="text-gray-700 block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
 							role="menuitem"
 						>
-							Edit List
+							Edit Task
 						</button>
 						<button
 							type="submit"
@@ -86,13 +88,13 @@ const ListDetailOptions = () => {
 							className="text-red-600 block w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
 							role="menuitem"
 						>
-							Delete List
+							Delete Task
 						</button>
 						<Modal isOpen={isEditModalOpen} onClose={closeEditModal}>
-							<EditListForm closeModal={closeEditModal} />
+							<EditTaskForm closeModal={closeEditModal} task={task} />
 						</Modal>
 						<Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
-							<DeleteListForm closeModal={closeDeleteModal} />
+							<DeleteTaskForm closeModal={closeDeleteModal} task={task} />
 						</Modal>
 					</div>
 				</div>
@@ -101,4 +103,4 @@ const ListDetailOptions = () => {
 	)
 }
 
-export default ListDetailOptions;
+export default TaskOptions;

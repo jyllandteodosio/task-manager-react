@@ -19,10 +19,10 @@ const List = ({ list, isSelected, handleListClick }: ListProps) => {
 		<li id="list"
 			onClick={handleListClick}
 			className={`${listClass} flex justify-between p-4 rounded-lg hover:bg-[#5A5A5A] hover:border-[#5A5A5A] hover:text-white transition-all duration-300 ease-in-out`}>
-			<h3 id="list-title">
+			<h3 id="list-title" className="pr-4 text-sm">
 				{listTitleTrimmed}
 			</h3>
-			<UserIcon />
+			<UserIcon userId={list.ownerId}/>
 		</li>
 	)
 }

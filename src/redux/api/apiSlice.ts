@@ -1,7 +1,27 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { config } from '../../../config';
+import { ListType } from '@/types/lists';
+import { UserType } from '@/types/users';
 
 const BASE_URL = config.API_URL;
+
+interface AddCollaboratorArgs {
+	listId: string;
+	collaboratorId: string;
+}
+interface RemoveCollaboratorArgs {
+	listId: string;
+	collaboratorId: string;
+}
+
+type AddCollaboratorResponse = ListType;
+type RemoveCollaboratorResponse = ListType;
+type SearchUsersResponse = { result: UserType[] };
+
+interface RegisterPayloadWithRecaptcha extends Partial<UserType> {
+	recaptchaToken?: string;
+}
+
 
 export const apiSlice = createApi({
 	reducerPath: 'api',
@@ -17,8 +37,13 @@ export const apiSlice = createApi({
 			query: (id) => `/users/${id}`,
 			providesTags: (result, error, id) => [{ type: 'User', id }],
 		}),
+		searchUsers: builder.query<SearchUsersResponse, string>({
+			query: (searchTerm) => `/users?username=${encodeURIComponent(searchTerm)}`,
+			providesTags: (result, error, searchTerm) => [{ type: 'User', id: `SEARCH_${searchTerm}` }],
+			keepUnusedDataFor: 60,
+		}),
 		addUser: builder.mutation({
-			query: (newUser) => ({
+			query: (newUser: RegisterPayloadWithRecaptcha) => ({
 				url: '/register',
 				method: 'POST',
 				body: newUser,
@@ -73,15 +98,29 @@ export const apiSlice = createApi({
 			}),
 			invalidatesTags: ['List'],
 		}),
+		addCollaborator: builder.mutation<AddCollaboratorResponse, AddCollaboratorArgs>({
+			query: ({ listId, collaboratorId }) => ({
+				url: `/lists/<span class="math-inline">\{listId\}/share/</span>{collaboratorId}`,
+				method: 'POST',
+			}),
+			invalidatesTags: (result, error, { listId }) => [{ type: 'List', id: listId }],
+		}),
+		removeCollaborator: builder.mutation<RemoveCollaboratorResponse, RemoveCollaboratorArgs>({
+			query: ({ listId, collaboratorId }) => ({
+				url: `/lists/<span class="math-inline">\{listId\}/share/</span>{collaboratorId}`,
+				method: 'DELETE',
+			}),
+			invalidatesTags: (result, error, { listId }) => [{ type: 'List', id: listId }],
+		}),
 
 		// Task endpoints
 		fetchTasksByListId: builder.query({
 			query: (listId) => `/lists/${listId}/tasks`,
-			providesTags: (result, error, listId) => [{ type: 'Task', id: listId }],
+			providesTags: ['Task'],
 		}),
 		fetchTaskByIdUnderList: builder.query({
-			query: ({ listId, taskId }) => `/lists/${listId}/tasks/${taskId}`,
-			providesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `${listId}-${taskId}` }],
+			query: ({ listId, taskId }) => `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
+			providesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `<span class="math-inline">\{listId\}\-</span>{taskId}` }],
 		}),
 		addTaskUnderList: builder.mutation({
 			query: ({ listId, newTask }) => ({
@@ -89,37 +128,44 @@ export const apiSlice = createApi({
 				method: 'POST',
 				body: newTask,
 			}),
-			invalidatesTags: (result, error, { listId }) => [{ type: 'Task', id: listId }],
+			invalidatesTags: ['Task'],
 		}),
 		updateTaskUnderList: builder.mutation({
 			query: ({ listId, taskId, updatedTask }) => ({
-				url: `/lists/${listId}/tasks/${taskId}`,
+				url: `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
 				method: 'PUT',
 				body: updatedTask,
 			}),
-			invalidatesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `${listId}-${taskId}` }],
+			invalidatesTags: ['Task'],
 		}),
 		deleteTaskUnderList: builder.mutation({
 			query: ({ listId, taskId }) => ({
-				url: `/lists/${listId}/tasks/${taskId}`,
+				url: `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
 				method: 'DELETE',
 			}),
-			invalidatesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `${listId}-${taskId}` }],
+			invalidatesTags: ['Task'],
 		}),
 	}),
 });
 
 export const {
+	// User hooks
 	useFetchUsersQuery,
 	useFetchUserByIdQuery,
+	useSearchUsersQuery,
+	useLazySearchUsersQuery,
 	useAddUserMutation,
 	useUpdateUserMutation,
 	useDeleteUserMutation,
+	// List hooks
 	useFetchListsQuery,
 	useFetchListByIdQuery,
 	useAddListMutation,
 	useUpdateListMutation,
 	useDeleteListMutation,
+	useAddCollaboratorMutation,
+	useRemoveCollaboratorMutation,
+	// Task hooks
 	useFetchTasksByListIdQuery,
 	useFetchTaskByIdUnderListQuery,
 	useAddTaskUnderListMutation,
