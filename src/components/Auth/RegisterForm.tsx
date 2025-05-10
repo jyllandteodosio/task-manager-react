@@ -2,13 +2,13 @@
 
 import React, { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { UserType } from "@/types/users";
+import { useAddUserMutation } from "@/redux/api/apiSlice";
+import { useGoogleReCaptcha } from '@google-recaptcha/react';
 import Link from "next/link";
 import Image from "next/image";
 import TaskaruIcon from "@/assets/icons/taskaru_icon.png";
-import { UserType } from "@/types/users";
-import { useAddUserMutation } from "@/redux/api/apiSlice";
 import ErrorMessageAlert from "@/components/Alerts/ErrorMessageAlert";
-// import { useGoogleReCaptcha } from '@google-recaptcha/react';
 
 
 type RegisterFormData = Omit<UserType, '_id' | 'password'> & { password?: string };
@@ -23,8 +23,7 @@ const RegisterForm = () => {
     });
     const [addUser, { isLoading, isError, error }] = useAddUserMutation();
 
-    // const { executeV3 } = useGoogleReCaptcha();
-
+    const { executeV3 } = useGoogleReCaptcha();
 
     const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -42,14 +41,13 @@ const RegisterForm = () => {
             return;
         }
 
-        // if (!executeV3) {
-        //     console.log('Recaptcha not yet available');
-        //     return;
-        // }
+        if (!executeV3) {
+            console.log('Recaptcha not yet available');
+            return;
+        }
 
         try {
-            // const token = await executeV3('register');
-            const token = "dummy";
+            const token = await executeV3('register');
 
             const payload: Partial<UserType> & { recaptchaToken?: string } = {
                 username: registerData.username,
@@ -67,8 +65,7 @@ const RegisterForm = () => {
         } catch (err) {
             console.error("Sign Up failed:", err);
         }
-        // }, [executeV3, registerData, addUser, router]);
-    }, [registerData, addUser, router]);
+    }, [executeV3, registerData, addUser, router]);
 
 
     return (

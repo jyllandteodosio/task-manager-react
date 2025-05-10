@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { AppDispatch } from '@/redux/store';
 import { login } from '@/redux/slices/authSlice';
 import { UserCredentials } from "@/types/userCredentials";
+import { useGoogleReCaptcha } from '@google-recaptcha/react';
 import Link from "next/link";
 import Image from "next/image";
 import TaskaruIcon from "@/assets/icons/taskaru_icon.png";
 import ErrorMessageAlert from "../Alerts/ErrorMessageAlert";
-// import { useGoogleReCaptcha } from '@google-recaptcha/react';
 
 const LoginForm = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +21,7 @@ const LoginForm = () => {
 	});
 	const [error, setError] = useState<string | null>(null);
 
-	// const { executeV3 } = useGoogleReCaptcha();
+	const { executeV3 } = useGoogleReCaptcha();
 
 	const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
@@ -34,14 +34,13 @@ const LoginForm = () => {
 	const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		// if (!executeV3) {
-		// 	console.log('Recaptcha not yet available');
-		// 	return;
-		// }
+		if (!executeV3) {
+			console.log('Recaptcha not yet available');
+			return;
+		}
 
 		try {
-			// const token = await executeV3('login');
-			const token = "dummy";
+			const token = await executeV3('login');
 
 			const loginPayload = {
 				...loginData,
@@ -61,11 +60,10 @@ const LoginForm = () => {
 				setError("An unknown error occurred");
 			}
 		}
-	// }, [executeV3, loginData, dispatch, router]);
-	}, [loginData, dispatch, router]);
+	}, [executeV3, loginData, dispatch, router]);
 
 	return (
-		<div id="login-wrapper" className="mt-10 w-lg sm:mx-auto sm:w-full sm:max-w-sm">
+		<div id="login-wrapper" className="mt-10 w-xl sm:mx-auto sm:w-full sm:max-w-sm">
 			<div className="flex-full items-center text-center justify-center mb-8">
 				<Image src={TaskaruIcon} alt="Taskaru" priority={true} className="w-24 h-24 m-auto" />
 				<h2 className="text-2xl font-semibold py-2">Sign in to TASKARU</h2>

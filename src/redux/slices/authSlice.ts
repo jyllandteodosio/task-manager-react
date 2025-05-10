@@ -9,7 +9,6 @@ interface LoginCredentialsWithRecaptcha extends UserCredentials {
 	recaptchaToken: string;
 }
 
-
 export const checkAuth = createAsyncThunk<
 	{ isAuthenticated: boolean; user: any },
 	void,
@@ -58,6 +57,25 @@ export const login = createAsyncThunk<
 	}
 });
 
+export const logout = createAsyncThunk<
+	void,
+	void,
+	{ rejectValue: string }
+>('auth/logout', async (_, { rejectWithValue }) => {
+	try {
+		const response = await fetch(`${BASE_URL}/logout`, {
+			method: 'POST',
+			credentials: 'include',
+		});
+		if (!response.ok) throw new Error('Failed to log out');
+	} catch (error) {
+		if (error instanceof Error) {
+			return rejectWithValue(error.message);
+		}
+		return rejectWithValue('An unknown error occurred');
+	}
+});
+
 const initialState: AuthState = {
 	user: null,
 	isAuthenticated: false,
@@ -69,12 +87,7 @@ const initialState: AuthState = {
 const authSlice = createSlice({
 	name: 'auth',
 	initialState: initialState,
-	reducers: {
-		logout: (state) => {
-			state.user = null;
-			state.isAuthenticated = false;
-		},
-	},
+	reducers: {},
 	extraReducers: (builder) => {
 		builder
 			.addCase(checkAuth.pending, (state) => {
@@ -104,9 +117,22 @@ const authSlice = createSlice({
 			.addCase(login.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.payload || 'An unknown error occurred';
+			})
+			.addCase(logout.pending, (state) => {
+				state.status = 'loading';
+				state.error = null;
+			})
+			.addCase(logout.fulfilled, (state) => {
+				state.status = 'succeeded';
+				state.isAuthenticated = false;
+				state.user = null;
+				state.error = null;
+			})
+			.addCase(logout.rejected, (state, action) => {
+				state.status = 'failed';
+				state.error = action.payload || 'An unknown error occurred';
 			});
 	},
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;
