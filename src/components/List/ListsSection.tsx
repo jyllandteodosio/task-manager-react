@@ -58,7 +58,7 @@ const ListsSection = () => {
 			<div id="lists" className="mt-6 max-h-[65vh] overflow-y-auto inset-shadow-md">
 				<ul className="flex flex-col gap-y-4">
 					{isLoading && <p>Loading lists...</p>}
-					{isError && <p className="text-red-500">"Failed to load lists"</p>}
+					{isError && <p className="text-red-500">Failed to load lists</p>}
 					{lists && lists.result && lists.result.length > 0 ? (
 						lists.result.map((list: ListType) => (
 							<List

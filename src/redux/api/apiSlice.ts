@@ -120,7 +120,7 @@ export const apiSlice = createApi({
 		}),
 		fetchTaskByIdUnderList: builder.query({
 			query: ({ listId, taskId }) => `/lists/${listId}/tasks/${taskId}`,
-			providesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `${taskId}` }],
+			providesTags: (result, error, { taskId }) => [{ type: 'Task', id: `${taskId}` }],
 		}),
 		addTaskUnderList: builder.mutation({
 			query: ({ listId, newTask }) => ({

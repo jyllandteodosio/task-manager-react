@@ -27,7 +27,7 @@ const DeleteListForm: React.FC<DeleteListFormProps> = ({ closeModal }) => {
 		const payload = currentList._id;
 
 		try {
-			const result = await deleteList(payload).unwrap();
+			await deleteList(payload).unwrap();
 
 			dispatch(clearCurrentList());
 

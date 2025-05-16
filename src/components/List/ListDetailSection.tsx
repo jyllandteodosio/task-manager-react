@@ -76,7 +76,7 @@ const ListDetailSection = () => {
 		// Join the list room
 		socket.emit('joinList', listId);
 
-		const handleAddCollaborator = ({ listId: eventListId, collaboratorId, ownerId }: any) => {
+		const handleAddCollaborator = ({ listId: eventListId, collaboratorId }: any) => {
 			if (collaboratorId === currentUser._id) {
 				notify(
 					'Collaborator Added',
@@ -92,7 +92,7 @@ const ListDetailSection = () => {
 			}
 		};
 
-		const handleRemoveCollaborator = ({ listId: eventListId, collaboratorId, ownerId }: any) => {
+		const handleRemoveCollaborator = ({ listId: eventListId, collaboratorId }: any) => {
 			if (collaboratorId === currentUser._id) {
 				notify(
 					'Collaborator Removed',
@@ -109,7 +109,7 @@ const ListDetailSection = () => {
 		};
 
 
-		const handleTaskAdded = ({ listId: eventListId, task, message }: { listId: string, task: TaskType, message?: string }) => {
+		const handleTaskAdded = ({ listId: eventListId, task }: { listId: string, task: TaskType }) => {
 			if (eventListId === listId) {
 				notify(
 					'Task Added',
@@ -124,7 +124,7 @@ const ListDetailSection = () => {
 			}
 		};
 
-		const handleTaskEdited = ({ listId: eventListId, task, message }: { listId: string, task: TaskType, message?: string }) => {
+		const handleTaskEdited = ({ listId: eventListId, task }: { listId: string, task: TaskType }) => {
 			if (eventListId === listId) {
 				notify(
 					'Task Edited',
@@ -142,7 +142,7 @@ const ListDetailSection = () => {
 			}
 		};
 
-		const handleTaskDeleted = ({ listId: eventListId, task, message }: { listId: string, task: TaskType, message?: string }) => {
+		const handleTaskDeleted = ({ listId: eventListId, task }: { listId: string, task: TaskType }) => {
 			if (eventListId === listId) {
 				notify(
 					'Task Deleted',

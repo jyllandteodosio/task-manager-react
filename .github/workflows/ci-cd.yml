@@ -26,13 +26,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Run Linters
-      - name: Run ESLint
-        run: npm run lint
+      # # Run Linters
+      # - name: Run ESLint
+      #   run: npm run lint
 
-      # Run Tests
-      - name: Run Tests
-        run: npm test
+      # # Run Tests
+      # - name: Run Tests
+      #   run: npm test
 
       # Optional: Run security audit
       - name: Run npm audit

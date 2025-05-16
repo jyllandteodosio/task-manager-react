@@ -53,7 +53,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ task, closeModal }) => {
 		};
 
 		try {
-			const data = await updateTask(payload).unwrap();
+			await updateTask(payload).unwrap();
 
 			setFormData({ title: "", description: "" });
 			closeModal();

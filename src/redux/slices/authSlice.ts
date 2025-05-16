@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { config } from '../../../config';
 import { UserCredentials } from '@/types/userCredentials';
-import { UserType, AuthState } from '@/types/users';
+import { AuthState } from '@/types/users';
 
 const BASE_URL = config.API_URL;
 

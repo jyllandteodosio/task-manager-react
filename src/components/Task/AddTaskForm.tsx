@@ -51,10 +51,10 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({ closeModal }) => {
 				title: formData.title.trim(),
 				description: formData.description?.trim() || undefined,
 			},
-		};			
+		};
 
 		try {
-			const result = await addTask(payload).unwrap();
+			await addTask(payload).unwrap();
 
 			setFormData({ title: "", description: "" });
 			closeModal();

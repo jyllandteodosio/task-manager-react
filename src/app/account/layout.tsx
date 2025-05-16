@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { checkAuth } from "@/api/auth";
-import { useDispatch } from 'react-redux';
-// import { setCurrentUser } from '@/redux/slices/usersSlice';
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { checkAuth } from "@/redux/slices/authSlice";
 
 export default function AccountLayout({
 	children,
@@ -13,18 +13,14 @@ export default function AccountLayout({
 }) {
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 	const router = useRouter();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		const verifyUser = async () => {
 			try {
-				const authData = await checkAuth();
-
-				if (authData?.isAuthenticated) {
+				const resultAction = await dispatch(checkAuth()).unwrap();
+				if (resultAction.isAuthenticated) {
 					setIsAuthenticated(true);
-					// if (authData.userId) {
-					// 	dispatch(setCurrentUser(authData.userId));
-					// }
 				} else {
 					router.push("/login");
 				}
@@ -35,7 +31,8 @@ export default function AccountLayout({
 		};
 
 		verifyUser();
-	}, [router]);
+	}, [dispatch, router]);
+
 	if (isAuthenticated === null) return <p>Loading...</p>;
 
 	return <>{children}</>;

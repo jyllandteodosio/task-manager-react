@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useDeleteTaskUnderListMutation } from "@/redux/api/apiSlice";
 import { RootState } from "@/redux/store";
 import { TaskType } from "@/types/tasks";
@@ -30,7 +30,7 @@ const DeleteTaskForm: React.FC<DeleteTaskFormProps> = ({ task, closeModal }) => 
 		};
 
 		try {
-			const result = await deleteTask(payload).unwrap();
+			await deleteTask(payload).unwrap();
 
 			closeModal();
 

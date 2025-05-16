@@ -23,7 +23,6 @@ const SharedWith = () => {
         data: apiResponse,
         isLoading,
         isFetching,
-        isError,
     } = useFetchListByIdQuery(activeListId, {
         skip: !activeListId,
     });

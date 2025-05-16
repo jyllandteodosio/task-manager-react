@@ -1,7 +1,6 @@
 'use client';
 
 import NavigationBar from "@/components/layouts/NavigationBar";
-import LoginForm from "@/components/Auth/LoginForm";
 import { GoogleReCaptchaProvider } from "@google-recaptcha/react";
 import LoginFormOAuth from "@/components/Auth/LoginFormOAuth";
 
@@ -16,7 +15,6 @@ export default function Login() {
 							type="v3"
 							siteKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
 						>
-							{/* <LoginForm /> */}
 							<LoginFormOAuth />
 						</GoogleReCaptchaProvider>
 					</main>
