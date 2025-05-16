@@ -8,7 +8,7 @@ import {
 	ExclamationTriangleIcon,
 } from '@heroicons/react/24/solid';
 
-interface NotificationProps extends ToastContentProps<any> {
+interface NotificationProps extends ToastContentProps {
 	title: string;
 	description: string;
 	type?: 'success' | 'error' | 'info' | 'warning';

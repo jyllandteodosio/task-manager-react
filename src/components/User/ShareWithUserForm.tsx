@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useLazySearchUsersQuery, useAddCollaboratorMutation } from '@/redux/api/apiSlice';
@@ -30,15 +30,16 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 		{ isLoading: isAddingCollaborator, isError: isAddError, error: addError }
 	] = useAddCollaboratorMutation();
 
-	const debouncedSearch = useCallback(
-		debounce((query: string) => {
-			if (query.trim().length > 1) {
-				triggerSearch(query);
-				setIsDropdownOpen(true);
-			} else {
-				setIsDropdownOpen(false);
-			}
-		}, 300),
+	const debouncedSearch = useMemo(
+		() =>
+			debounce((query: string) => {
+				if (query.trim().length > 1) {
+					triggerSearch(query);
+					setIsDropdownOpen(true);
+				} else {
+					setIsDropdownOpen(false);
+				}
+			}, 300),
 		[triggerSearch]
 	);
 
@@ -102,8 +103,9 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
+			debouncedSearch.cancel();
 		};
-	}, []);
+	}, [debouncedSearch]);
 
 	const availableUsers = searchResults?.filter(
 		user => !selectedUsers.some(selected => selected._id === user._id)

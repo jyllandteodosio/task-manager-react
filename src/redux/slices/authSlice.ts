@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { config } from '../../../config';
 import { UserCredentials } from '@/types/userCredentials';
-import { AuthState } from '@/types/users';
+import { UserType, AuthState } from '@/types/users';
 
-const BASE_URL = config.API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface LoginCredentialsWithRecaptcha extends UserCredentials {
 	recaptchaToken: string;
 }
 
 export const checkAuth = createAsyncThunk<
-	{ isAuthenticated: boolean; user: any },
+	{ isAuthenticated: boolean; user: UserType | null },
 	void,
 	{ rejectValue: string }
 >('auth/checkAuth', async (_, { rejectWithValue }) => {
@@ -41,7 +40,7 @@ export const checkAuth = createAsyncThunk<
 });
 
 export const login = createAsyncThunk<
-	{ user: any },
+	{ user: UserType },
 	LoginCredentialsWithRecaptcha,
 	{ rejectValue: string }
 >('auth/login', async (credentials, { rejectWithValue }) => {

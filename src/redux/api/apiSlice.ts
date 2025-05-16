@@ -1,9 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { config } from '../../../config';
 import { ListType } from '@/types/lists';
 import { UserType } from '@/types/users';
 
-const BASE_URL = config.API_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface AddCollaboratorArgs {
 	listId: string;

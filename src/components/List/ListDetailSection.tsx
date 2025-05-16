@@ -14,6 +14,11 @@ import AddTaskForm from '../Task/AddTaskForm';
 import ListDetailOptions from './ListDetailOptions';
 import Notification from '../layouts/Notification';
 
+interface CollaboratorEventPayload {
+	listId: string;
+	collaboratorId: string;
+}
+
 const ListDetailSection = () => {
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -36,7 +41,7 @@ const ListDetailSection = () => {
 		description: string,
 		type: 'success' | 'error' | 'info' | 'warning' = 'info'
 	) => {
-		toast((props: ToastContentProps<any>) => (
+		toast((props: ToastContentProps) => (
 			<Notification
 				title={title}
 				description={description}
@@ -76,7 +81,7 @@ const ListDetailSection = () => {
 		// Join the list room
 		socket.emit('joinList', listId);
 
-		const handleAddCollaborator = ({ listId: eventListId, collaboratorId }: any) => {
+		const handleAddCollaborator = ({ listId: eventListId, collaboratorId }: CollaboratorEventPayload) => {
 			if (collaboratorId === currentUser._id) {
 				notify(
 					'Collaborator Added',
@@ -92,7 +97,7 @@ const ListDetailSection = () => {
 			}
 		};
 
-		const handleRemoveCollaborator = ({ listId: eventListId, collaboratorId }: any) => {
+		const handleRemoveCollaborator = ({ listId: eventListId, collaboratorId }: CollaboratorEventPayload) => {
 			if (collaboratorId === currentUser._id) {
 				notify(
 					'Collaborator Removed',
