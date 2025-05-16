@@ -34,7 +34,6 @@ const SharedWith = () => {
         return currentUserId === listData?.ownerId;
     }, [currentUserId, listData?.ownerId]);
 
-
     const filteredCollaborators = useMemo(() => {
         if (listData?.collaborators && currentUserId) {
             const collaboratorsSource = listData.collaborators;

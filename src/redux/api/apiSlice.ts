@@ -38,7 +38,7 @@ export const apiSlice = createApi({
 			providesTags: (result, error, id) => [{ type: 'User', id }],
 		}),
 		searchUsers: builder.query<SearchUsersResponse, string>({
-			query: (searchTerm) => `/users?username=${encodeURIComponent(searchTerm)}`,
+			query: (searchTerm) => `/users?email=${encodeURIComponent(searchTerm)}`,
 			providesTags: (result, error, searchTerm) => [{ type: 'User', id: `SEARCH_${searchTerm}` }],
 			keepUnusedDataFor: 60,
 		}),
@@ -100,14 +100,14 @@ export const apiSlice = createApi({
 		}),
 		addCollaborator: builder.mutation<AddCollaboratorResponse, AddCollaboratorArgs>({
 			query: ({ listId, collaboratorId }) => ({
-				url: `/lists/<span class="math-inline">\{listId\}/share/</span>{collaboratorId}`,
+				url: `/lists/${listId}/share/${collaboratorId}`,
 				method: 'POST',
 			}),
 			invalidatesTags: (result, error, { listId }) => [{ type: 'List', id: listId }],
 		}),
 		removeCollaborator: builder.mutation<RemoveCollaboratorResponse, RemoveCollaboratorArgs>({
 			query: ({ listId, collaboratorId }) => ({
-				url: `/lists/<span class="math-inline">\{listId\}/share/</span>{collaboratorId}`,
+				url: `/lists/${listId}/share/${collaboratorId}`,
 				method: 'DELETE',
 			}),
 			invalidatesTags: (result, error, { listId }) => [{ type: 'List', id: listId }],
@@ -119,8 +119,8 @@ export const apiSlice = createApi({
 			providesTags: ['Task'],
 		}),
 		fetchTaskByIdUnderList: builder.query({
-			query: ({ listId, taskId }) => `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
-			providesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `<span class="math-inline">\{listId\}\-</span>{taskId}` }],
+			query: ({ listId, taskId }) => `/lists/${listId}/tasks/${taskId}`,
+			providesTags: (result, error, { listId, taskId }) => [{ type: 'Task', id: `${taskId}` }],
 		}),
 		addTaskUnderList: builder.mutation({
 			query: ({ listId, newTask }) => ({
@@ -132,7 +132,7 @@ export const apiSlice = createApi({
 		}),
 		updateTaskUnderList: builder.mutation({
 			query: ({ listId, taskId, updatedTask }) => ({
-				url: `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
+				url: `/lists/${listId}/tasks/${taskId}`,
 				method: 'PUT',
 				body: updatedTask,
 			}),
@@ -140,7 +140,7 @@ export const apiSlice = createApi({
 		}),
 		deleteTaskUnderList: builder.mutation({
 			query: ({ listId, taskId }) => ({
-				url: `/lists/<span class="math-inline">\{listId\}/tasks/</span>{taskId}`,
+				url: `/lists/${listId}/tasks/${taskId}`,
 				method: 'DELETE',
 			}),
 			invalidatesTags: ['Task'],

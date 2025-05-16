@@ -72,6 +72,8 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 			return;
 		}
 
+		console.log("Sharing list with users:", selectedUsers);
+
 		const promises = selectedUsers.map(user =>
 			addCollaborator({ listId, collaboratorId: user._id }).unwrap()
 		);
@@ -125,12 +127,12 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 						<div className="flex flex-wrap items-center gap-1 rounded-md border border-gray-300 p-1.5 focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
 							{selectedUsers.map(user => (
 								<span key={user._id} className="inline-flex items-center rounded bg-indigo-100 px-2 py-0.5 text-sm font-medium text-indigo-800">
-									{user.username}
+									{user.email}
 									<button
 										type="button"
 										onClick={() => handleRemoveUser(user._id)}
 										className="ml-1 flex-shrink-0 rounded-full p-0.5 text-indigo-500 hover:bg-indigo-200 hover:text-indigo-700 focus:outline-none"
-										aria-label={`Remove ${user.username}`}
+										aria-label={`Remove ${user.email}`}
 									>
 										<svg className="h-3 w-3" stroke="currentColor" fill="none" viewBox="0 0 8 8">
 											<path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
@@ -145,7 +147,7 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 								value={searchTerm}
 								onChange={handleSearchChange}
 								onFocus={() => searchTerm.trim().length > 1 && setIsDropdownOpen(true)}
-								placeholder={selectedUsers.length > 0 ? "" : "Search usernames..."}
+								placeholder={selectedUsers.length > 0 ? "" : "Search emails..."}
 								className="flex-grow border-none p-0.5 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0"
 								autoComplete="off"
 							/>
@@ -166,7 +168,7 @@ const ShareWithUserForm: React.FC<ShareWithUserFormProps> = ({ closeModal }) => 
 										onClick={() => handleSelectUser(user)}
 										className="relative cursor-pointer select-none px-3 py-2 text-gray-900 hover:bg-indigo-600 hover:text-white"
 									>
-										{user.username}
+										{user.email}
 									</div>
 								))}
 							</div>

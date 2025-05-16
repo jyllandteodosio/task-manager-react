@@ -16,13 +16,13 @@ export default function Home() {
             >
               Log In
             </Link>{" "}
-            or{" "}
+            {/* or{" "}
             <Link
               className="font-semibold text-indigo-400 hover:text-indigo-300"
               href="/register"
             >
               Register
-            </Link>
+            </Link> */}
           </p>
         </main>
       </div>

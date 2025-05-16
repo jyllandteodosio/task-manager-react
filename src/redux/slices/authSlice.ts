@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { config } from '../../../config';
 import { UserCredentials } from '@/types/userCredentials';
-import { AuthState } from '@/types/users';
+import { UserType, AuthState } from '@/types/users';
 
 const BASE_URL = config.API_URL;
 
@@ -15,16 +15,22 @@ export const checkAuth = createAsyncThunk<
 	{ rejectValue: string }
 >('auth/checkAuth', async (_, { rejectWithValue }) => {
 	try {
-		const response = await fetch(`${BASE_URL}/auth-status`, {
+		const response = await fetch(`${BASE_URL}/auth/auth-status`, {
 			method: 'GET',
 			credentials: 'include',
+			headers: {
+				'Content-Type': 'application/json',
+			}
 		});
+
 		if (!response.ok) throw new Error('Failed to get auth status');
+
 		const data = await response.json();
 		console.log('Auth status response:', data);
+
 		return {
 			isAuthenticated: data.isAuthenticated,
-			user: data.result,
+			user: data.user,
 		};
 	} catch (error) {
 		if (error instanceof Error) {
