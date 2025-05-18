@@ -62,9 +62,9 @@ jobs:
             ${{ secrets.DOCKER_HUB_USERNAME }}/taskaru-frontend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # Pass build arguments if needed by your Dockerfile
-          # build-args: |
-          #   NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+        env:
+          NEXT_PUBLIC_RECAPTCHA_SITE_KEY: ${{ vars.NEXT_PUBLIC_RECAPTCHA_SITE_KEY }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
       # Optional: Add a notification step here if needed,
       # e.g., sending a message to Slack or Discord that a new image is ready.
