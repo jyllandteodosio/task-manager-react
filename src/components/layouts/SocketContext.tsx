@@ -15,11 +15,16 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 	const currentUser = useSelector((state: RootState) => state.auth.user);
 	const [socket, setSocket] = useState<Socket | null>(null);
 
+	const isProduction = process.env.NODE_ENV === 'production';
+	const socketPath = isProduction ? '/api/socket.io' : '/socket.io';
+
 	useEffect(() => {
 		if (!currentUser?._id) return;
 
 		// Initialize the socket connection
 		const newSocket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000', {
+			path: socketPath,
+			transports: ['websocket'],
 			withCredentials: true,
 			secure: true,
 			query: { userId: currentUser._id },
