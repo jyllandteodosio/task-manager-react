@@ -6,7 +6,6 @@ import TaskaruIcon from "@/assets/icons/taskaru_icon.png";
 const LoginFormOAuth: React.FC = () => {
 	const handleGoogleSignIn = () => {
 		console.log('Initiating Google Sign-In...');
-		console.log("NEXT_PUBLIC_API_URL: " + process.env.NEXT_PUBLIC_API_URL);
 		window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
 	};
 
