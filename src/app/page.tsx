@@ -18,7 +18,7 @@ export default function Home() {
             TASKARU
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Seamlessly share lists with TASKARU. Whether it's a shopping list for the family, a project to-do with friends, or your daily exercise routine, keep everyone on the same page.
+            Seamlessly share lists with TASKARU. Whether it&apos;s a shopping list for the family, a project to-do with friends, or your daily exercise routine, keep everyone on the same page.
           </p>
 
           <a
